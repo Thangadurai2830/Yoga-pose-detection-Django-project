@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>YogaPoseAI - Detect Pose</title>
+  <link rel="stylesheet" href="{% static 'css/pose_detection.css' %}" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="pose-page">
+
+  <!-- Navbar -->
+  <header class="pose-header">
+    <div class="pose-logo" onclick="window.location.href='/'">🧘 YogaPoseAI</div>
+    <nav class="pose-nav">
+      <a href="/">Home</a>
+      <a href="#contact-section">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Pose Detection Section -->
+  <section class="pose-detect-section">
+    <h1 class="pose-heading">📸 Detect Your Yoga Pose</h1>
+    <p class="pose-subheading">Choose an option below to get started</p>
+
+    <div class="pose-detect-controls">
+      <!-- Upload Pose -->
+      <div class="pose-upload-card">
+        <h3>📁 Upload Image</h3>
+        <form method="POST" enctype="multipart/form-data" action="{% url 'upload_pose' %}">
+          {% csrf_token %}
+          <div class="pose-file-wrapper">
+            <label class="pose-upload-btn">
+              Upload Pose
+              <input type="file" name="poseImage" class="pose-file-input" accept="image/*" required />
+            </label>
+          </div>
+          <button type="submit" class="pose-action-btn">🔍 Detect Pose</button>
+        </form>
+      </div>
+
+      <!-- Camera Capture -->
+      <div class="pose-camera-card">
+        <h3>📷 Use Webcam</h3>
+        <button class="pose-action-btn" id="start-camera">Start Camera</button>
+        <video id="video-preview" autoplay muted playsinline style="display: none;"></video>
+        <button class="pose-action-btn" id="capture-pose">Capture Pose</button>
+      </div>
+    </div>
+
+    <!-- Canvas Preview -->
+    <div class="pose-preview-area">
+      <h3>🖼️ Captured Preview</h3>
+      <canvas id="pose-canvas"></canvas>
+      <button class="pose-result-btn" id="analyze-btn">🔍 Analyze Captured Pose</button>
+      <p id="analysis-result" style="margin-top: 1.5rem; font-size: 1.1rem; color: #2d3748;"></p>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <footer class="pose-footer" id="contact-section">
+    <h2>📬 Contact Us</h2>
+    <form class="pose-contact-form" action="#" method="POST">
+      <div class="pose-form-row">
+        <input type="text" name="name" placeholder="👤 Your Name" required />
+        <input type="email" name="email" placeholder="📧 Your Email" required />
+      </div>
+      <div class="pose-form-row">
+        <input type="tel" name="mobile" placeholder="📱 Mobile Number" required pattern="[0-9]{10}" />
+      </div>
+      <div class="pose-form-row">
+        <textarea name="message" rows="4" placeholder="📝 Your Message" required></textarea>
+      </div>
+      <button type="submit" class="pose-action-btn">🚀 Send Message</button>
+    </form>
+    <p class="pose-footer-copy">© 2025 YogaPoseAI. All rights reserved.</p>
+  </footer>
+
+  <!-- JS -->
+  <script src="{% static 'js/capture.js' %}"></script>
+  <script>
+    const analyzeBtn = document.getElementById('analyze-btn');
+    const canvas = document.getElementById('pose-canvas');
+    const resultDisplay = document.getElementById('analysis-result');
+
+    analyzeBtn.addEventListener('click', async () => {
+      const imageData = canvas.toDataURL('image/png');
+
+      resultDisplay.textContent = "🔄 Analyzing pose...";
+
+      const response = await fetch("{% url 'analyze_pose' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify({ image: imageData })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        resultDisplay.textContent = "✅ Pose Detected: " + result.pose;
+      } else {
+        resultDisplay.textContent = "⚠️ Error analyzing pose. Please try again.";
+      }
+    });
+  </script>
+  
+</body>
+</html>

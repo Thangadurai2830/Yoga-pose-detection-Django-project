@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>YogaPoseAI - Home</title>
+  <link rel="stylesheet" href="{% static 'css/index.css' %}" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="index-body">
+
+  <!-- Navbar -->
+  <header class="main-header">
+    <div class="logo" onclick="window.location.href='/'">🧘 YogaPoseAI</div>
+    <nav class="nav-links">
+      <a href="{% url 'upload_pose' %}">Try Now</a>
+      <a href="#features">Features</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>Improve Your Yoga Postures with AI 🧠</h1>
+      <p>Get instant feedback on your yoga poses using real-time camera or image upload powered by AI.</p>
+      <a href="{% url 'upload_pose' %}" class="btn-start">🧘 Start Now</a>
+    </div>
+    <div class="hero-image">
+      <img src="{% static 'assets/yoga-hero.png' %}" alt="Yoga Pose AI">
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section" id="features">
+    <h2>🔍 Key Features</h2>
+    <div class="features-grid">
+      <div class="feature-card">📷 Live Camera Detection</div>
+      <div class="feature-card">📁 Upload Pose Images</div>
+      <div class="feature-card">🧘 Instant AI Feedback</div>
+      <div class="feature-card">📊 Progress Tracking (Coming Soon)</div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="how-section">
+    <h2>⚙️ How It Works</h2>
+    <ul class="steps-list">
+      <li>1️⃣ Click "Start Now" to upload or capture your pose.</li>
+      <li>2️⃣ Our AI analyzes the image in seconds.</li>
+      <li>3️⃣ Receive feedback and improve your yoga practice.</li>
+    </ul>
+  </section>
+
+  <!-- Contact Section -->
+  <footer class="footer-section" id="contact">
+    <h2>📬 Contact Us</h2>
+
+    {% if messages %}
+      {% for message in messages %}
+        <p style="color: green; font-weight: bold;">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+
+    <form class="contact-form" action="{% url 'send_mail' %}" method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <input type="text" name="name" placeholder="👤 Your Name" required />
+        <input type="email" name="email" placeholder="📧 Your Email" required />
+      </div>
+      <div class="form-group">
+        <input type="tel" name="mobile" placeholder="📱 Mobile Number" required pattern="[0-9]{10}" />
+      </div>
+      <div class="form-group">
+        <textarea name="message" rows="4" placeholder="📝 Your Message" required></textarea>
+      </div>
+      <button type="submit" class="btn-submit">🚀 Send Message</button>
+    </form>
+    <p class="footer-copy">© 2025 YogaPoseAI. All rights reserved.</p>
+  </footer>
+
+  <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

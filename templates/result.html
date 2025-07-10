@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pose Detection Result</title>
+ <link rel="stylesheet" href="{% static 'css/result.css' %}">
+
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="resultpage-body">
+
+  <!-- Navbar -->
+  <header class="resultpage-header">
+    <div class="resultpage-logo" onclick="window.location.href='/'">🧘 YogaPoseAI</div>
+    <nav class="resultpage-nav">
+      <a href="/">Home</a>
+      <a href="{% url 'upload_pose' %}">Try Again</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Pose Result -->
+  <section class="resultpage-section">
+    <h1 class="resultpage-title">🧘 Pose Detected!</h1>
+    <p class="resultpage-subtitle">Our AI thinks your pose is:</p>
+
+    <div class="resultpage-card">
+      <img src="{{ pose_image_url }}" alt="Detected Pose" class="resultpage-image">
+      <h2 class="resultpage-pose">{{ pose_name }}</h2>
+      <p class="resultpage-feedback">{{ pose_feedback }}</p>
+    </div>
+
+    <div class="resultpage-buttons">
+      <a href="{% url 'upload_pose' %}" class="resultpage-btn resultpage-btn-try">🔄 Try Another Pose</a>
+      <a href="/" class="resultpage-btn resultpage-btn-home">🏠 Back to Home</a>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <footer class="resultpage-footer" id="contact">
+    <h2>📬 Contact Us</h2>
+    <form class="resultpage-contact-form" action="#" method="POST">
+      <div class="resultpage-form-group">
+        <input type="text" name="name" placeholder="👤 Your Name" required />
+        <input type="email" name="email" placeholder="📧 Your Email" required />
+      </div>
+      <div class="resultpage-form-group">
+        <input type="tel" name="mobile" placeholder="📱 Mobile Number" required pattern="[0-9]{10}" />
+      </div>
+      <div class="resultpage-form-group">
+        <textarea name="message" rows="4" placeholder="📝 Your Message" required></textarea>
+      </div>
+      <button type="submit" class="resultpage-submit-btn">🚀 Send Message</button>
+    </form>
+    <p class="resultpage-footer-copy">© 2025 YogaPoseAI. All rights reserved.</p>
+  </footer>
+
+  <script src="{% static 'js/result.js' %}"></script>
+</body>
+</html>
